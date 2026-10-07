@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}System logs — Foundry{% endblock %}
+{% block content %}<section class="admin-page wrap"><p class="eyebrow">ADMINISTRATION / SYSTEM LOGS</p><h1>Admin <span>activity.</span></h1>{% include 'admin/_nav.html' %}<div class="admin-list">{% for log in pagination.items %}<article class="admin-row"><div><strong>{{ log.action }} · {{ log.target_type }}{% if log.target_id %} #{{ log.target_id }}{% endif %}</strong><small>{{ log.summary }} · {{ log.actor.username if log.actor else 'System' }}</small></div><time>{{ log.created_at.strftime('%b %d, %Y · %I:%M %p') }}</time></article>{% else %}<div class="empty-state"><strong>No admin actions logged.</strong></div>{% endfor %}</div></section>{% endblock %}

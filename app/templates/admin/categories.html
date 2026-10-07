@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}Categories — Foundry{% endblock %}
+{% block content %}<section class="admin-page wrap"><p class="eyebrow">ADMINISTRATION / CATEGORIES</p><h1>Item <span>categories.</span></h1>{% include 'admin/_nav.html' %}<p class="form-subtitle">These categories are configured in the application and used by item report forms.</p><div class="category-list">{% for category in categories %}<span>{{ category }}</span>{% endfor %}</div></section>{% endblock %}

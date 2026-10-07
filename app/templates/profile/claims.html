@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}My claims — Foundry{% endblock %}
+{% block content %}
+<section class="profile-page wrap"><p class="eyebrow"><a href="{{ url_for('profile.view_profile') }}">YOUR ACCOUNT</a> / CLAIMS</p><div class="section-heading"><div><h2>My claims</h2></div></div>
+  {% if claims %}<div class="report-list">{% for claim in claims %}<article class="report-row"><span class="report-type">Claim</span><div class="report-detail"><strong>{{ claim.item.title }}</strong><small>Submitted {{ claim.created_at.strftime('%b %d, %Y') }}</small></div><span class="status">{{ claim.status|title }}</span></article>{% endfor %}</div>{% else %}<div class="empty-state"><span>✳</span><strong>No claims yet.</strong><p>Claims you submit for an item will appear here.</p></div>{% endif %}
+</section>
+{% endblock %}

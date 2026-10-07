@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Browse reports — Foundry{% endblock %}
+{% block content %}
+<section class="browse-page wrap">
+  <div class="browse-heading"><div><p class="eyebrow">COMMUNITY REPORTS</p><h1>Find what <span>matters.</span></h1><p>Search recent lost and found reports from your community.</p></div><div class="report-actions"><a class="button button-small" href="{{ url_for('items.create_report', item_type='lost') }}">Report lost</a><a class="outline-button" href="{{ url_for('items.create_report', item_type='found') }}">Report found</a></div></div>
+  <div class="browse-layout">
+    <aside class="filter-panel"><h2>Filters</h2><form method="get" action="{{ url_for('items.index') }}">
+      <input type="hidden" name="type" value="{{ selected_type }}">
+      <div class="field"><label for="q">Search</label><input class="input" id="q" name="q" value="{{ filters.q }}" placeholder="Phone, wallet, black bag…"></div>
+      <div class="field"><label for="category">Category</label><select class="input" id="category" name="category"><option value="">All categories</option>{% for value,label in categories %}<option value="{{ value }}" {% if filters.category == value %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="location">Location</label><input class="input" id="location" name="location" value="{{ filters.location }}" placeholder="Area or landmark"></div>
+      <div class="field"><label for="date_from">Date from</label><input class="input" id="date_from" type="date" name="date_from" value="{{ filters.date_from }}"></div>
+      <div class="field"><label for="date_to">Date to</label><input class="input" id="date_to" type="date" name="date_to" value="{{ filters.date_to }}"></div>
+      <div class="field"><label for="color">Color</label><input class="input" id="color" name="color" value="{{ filters.color }}"></div>
+      <div class="field"><label for="brand">Brand</label><input class="input" id="brand" name="brand" value="{{ filters.brand }}"></div>
+      <div class="field"><label for="status">Status</label><select class="input" id="status" name="status"><option value="ACTIVE" {% if filters.status == 'ACTIVE' %}selected{% endif %}>Active</option><option value="MATCHED" {% if filters.status == 'MATCHED' %}selected{% endif %}>Matched</option><option value="CLAIMED" {% if filters.status == 'CLAIMED' %}selected{% endif %}>Claimed</option><option value="RETURNED" {% if filters.status == 'RETURNED' %}selected{% endif %}>Returned</option><option value="CLOSED" {% if filters.status == 'CLOSED' %}selected{% endif %}>Closed</option><option value="ALL" {% if filters.status == 'ALL' %}selected{% endif %}>Any status</option></select></div>
+      <button class="button filter-submit" type="submit">Apply filters</button><a class="clear-filters" href="{{ url_for('items.index', type=selected_type) }}">Clear filters</a>
+    </form></aside>
+    <div class="results-area"><div class="result-toolbar"><div class="type-tabs" role="group" aria-label="Report type">{% for value,label in [('ALL','All'),('LOST','Lost'),('FOUND','Found')] %}<a class="type-tab {% if selected_type == value %}selected{% endif %}" href="{{ url_for('items.index', type=value, q=filters.q, category=filters.category, location=filters.location, date_from=filters.date_from, date_to=filters.date_to, color=filters.color, brand=filters.brand, status=filters.status) }}">{{ label }}</a>{% endfor %}</div><span class="result-count">{{ pagination.total }} report{{ '' if pagination.total == 1 else 's' }}</span></div>
+      {% if pagination.items %}<div class="item-grid">{% for item in pagination.items %}{% include 'items/_card.html' %}{% endfor %}</div>
+      {% else %}<div class="empty-state"><span>⌕</span><strong>No reports match those filters.</strong><p>Try a different search or clear a filter.</p></div>{% endif %}
+      {% if pagination.pages > 1 %}<nav class="pagination" aria-label="Result pages">{% if pagination.has_prev %}<a href="{{ url_for('items.index', page=pagination.prev_num, type=selected_type, q=filters.q, category=filters.category, location=filters.location, date_from=filters.date_from, date_to=filters.date_to, color=filters.color, brand=filters.brand, status=filters.status) }}">← Previous</a>{% endif %}<span>Page {{ pagination.page }} of {{ pagination.pages }}</span>{% if pagination.has_next %}<a href="{{ url_for('items.index', page=pagination.next_num, type=selected_type, q=filters.q, category=filters.category, location=filters.location, date_from=filters.date_from, date_to=filters.date_to, color=filters.color, brand=filters.brand, status=filters.status) }}">Next →</a>{% endif %}</nav>{% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Conversation about {{ item.title }} — Foundry{% endblock %}
+{% block content %}
+<section class="thread-page wrap"><p class="eyebrow"><a href="{{ url_for('messages.inbox') }}">MESSAGES</a> / {{ item.title }}</p><div class="thread-heading"><div><h1>{{ peer.username }}</h1><p>Conversation about <a href="{{ url_for('items.detail', item_id=item.id) }}">{{ item.title }}</a></p></div></div>
+<aside class="chat-consent-panel"><div><strong>Admin review permission</strong><p>If either participant allows review, admins can read the entire conversation, including both people’s messages. The other participant is notified when you change your setting.</p><small>Your setting: {{ 'Allowed' if current_allows_admin_review else 'Not allowed' }} · {{ peer.username }}: {{ 'Allowed' if peer_allows_admin_review else 'Not allowed' }}</small></div><form method="post" action="{{ url_for('messages.set_admin_review_consent', peer_id=peer.id, item_id=item.id, action='revoke' if current_allows_admin_review else 'allow') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="outline-button" type="submit">{{ 'Revoke my permission' if current_allows_admin_review else 'Allow admin review' }}</button></form></aside>
+{% if has_older %}<a class="older-messages-link" href="{{ url_for('messages.thread', peer_id=peer.id, item_id=item.id, before=oldest_message_id) }}">Load older messages</a>{% endif %}
+<div class="conversation">{% for message in conversation %}<article class="chat-message {% if message.sender_id == current_user.id %}sent{% else %}received{% endif %}"><p>{{ message.message }}</p><time datetime="{{ message.created_at.isoformat() }}">{{ message.created_at.strftime('%b %d, %Y · %I:%M %p') }}</time></article>{% endfor %}</div>
+<form class="reply-form" method="post">{{ form.hidden_tag() }}<label class="sr-only" for="{{ form.message.id }}">Your reply</label>{{ form.message(class_='input', rows='3', placeholder='Write a private reply…') }}{% for error in form.message.errors %}<span class="field-error">{{ error }}</span>{% endfor %}<button class="button" type="submit">Send <span aria-hidden="true">↗</span></button></form>
+</section>
+{% endblock %}
+{% block extra_scripts %}<script src="{{ url_for('static', filename='js/chat-submit.js') }}" defer></script>{% endblock %}

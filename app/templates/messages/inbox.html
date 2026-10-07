@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Messages — Foundry{% endblock %}
+{% block content %}
+<section class="profile-page wrap"><p class="eyebrow">PRIVATE CONVERSATIONS</p><h1>Your <span>messages.</span></h1><div class="message-list">{% for thread in threads %}<a class="message-row" href="{{ url_for('messages.thread', peer_id=thread.peer.id, item_id=thread.item.id) }}"><span class="message-avatar">{{ thread.peer.username[0]|upper }}</span><span class="message-row-content"><strong>{{ thread.peer.username }} · {{ thread.item.title if thread.item else 'Conversation' }}</strong><small>{{ thread.latest.message|truncate(110) }}</small></span><span class="message-row-meta">{{ thread.latest.created_at.strftime('%b %d') }}{% if thread.unread %}<i class="unread-dot" aria-label="{{ thread.unread }} unread"></i>{% endif %}</span></a>{% else %}<div class="empty-state"><span>✉</span><strong>No messages yet.</strong><p>When you contact a report owner or receive a reply, your conversation appears here.</p></div>{% endfor %}</div></section>
+{% endblock %}

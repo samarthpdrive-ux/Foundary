@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: foundry-lost-found
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m flask --app run.py db upgrade && gunicorn --bind 0.0.0.0:$PORT --workers 1 --threads 8 run:app
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: TRUSTED_HOSTS
+        fromService:
+          type: web
+          name: foundry-lost-found
+          envVarKey: RENDER_EXTERNAL_HOSTNAME
+      - key: PUBLIC_BASE_URL
+        fromService:
+          type: web
+          name: foundry-lost-found
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: TIDB_HOST
+        sync: false
+      - key: TIDB_USER
+        sync: false
+      - key: TIDB_PASSWORD
+        sync: false
+      - key: TIDB_DATABASE
+        sync: false
+      - key: TIDB_PORT
+        value: "4000"
+      - key: TIDB_SSL_CA
+        value: certs/isrgrootx1.pem
+      - key: IMAGE_STORAGE_BACKEND
+        value: google_drive
+      - key: GOOGLE_DRIVE_WEB_APP_URL
+        sync: false
+      - key: GOOGLE_DRIVE_SHARED_SECRET
+        sync: false
+      - key: RATELIMIT_STORAGE_URI
+        value: memory://

@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}My {{ kind|lower }} items — Foundry{% endblock %}
+{% block content %}
+<section class="profile-page wrap"><p class="eyebrow"><a href="{{ url_for('profile.view_profile') }}">YOUR ACCOUNT</a> / REPORTS</p><div class="section-heading"><div><h2>My {{ kind|lower }} items</h2></div></div>
+  {% if items %}<div class="report-list">{% for item in items %}<article class="report-row"><span class="report-type">{{ item.type|title }}</span><div class="report-detail"><strong>{{ item.title }}</strong><small>{{ item.category }} · {{ item.location_name }} · {{ item.date.strftime('%b %d, %Y') }}</small></div><span class="status status-{{ item.status|lower }}">{{ item.status|title }}</span></article>{% endfor %}</div>{% else %}<div class="empty-state"><span>✳</span><strong>No {{ kind|lower }} reports yet.</strong><p>Your reports will appear here when you create them.</p></div>{% endif %}
+</section>
+{% endblock %}

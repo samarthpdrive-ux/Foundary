@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Found {{ item.title }}? — Foundry{% endblock %}
+{% block content %}
+<section class="narrow-page wrap"><p class="eyebrow">SAFE ITEM RECOVERY</p><h1>Found something <span>important?</span></h1><div class="claim-item-summary"><strong>{{ item.title }}</strong><span>{{ item.category }} · {{ item.type|title }} report</span></div><p class="form-subtitle">Send a note to the owner. Foundry keeps the owner’s private contact details hidden.</p><form class="form-panel stacked-panel" method="post">{{ form.hidden_tag() }}{% for field in [form.message, form.contact_email] %}<div class="field"><label for="{{ field.id }}">{{ field.label.text }}</label>{{ field(class_='input', rows='4') if field.name == 'message' else field(class_='input', autocomplete='email') }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>{% endfor %}<div class="form-actions">{{ form.submit(class_='button') }}</div></form></section>
+{% endblock %}

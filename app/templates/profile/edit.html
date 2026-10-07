@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Edit profile — Foundry{% endblock %}
+{% block content %}
+<section class="narrow-page wrap"><p class="eyebrow">YOUR ACCOUNT</p><h1>Edit your <span>profile.</span></h1><p class="form-subtitle">Your email address is kept private and can’t be changed here.</p>
+<form class="form-panel stacked-panel" method="post">{{ form.hidden_tag() }}
+  {% for field in [form.full_name, form.username] %}<div class="field"><label for="{{ field.id }}">{{ field.label.text }}</label>{{ field(class_='input') }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>{% endfor %}
+  <div class="field"><label>Email</label><div class="input input-readonly">{{ current_user.email }}</div></div>
+  <div class="form-actions">{{ form.submit(class_='button') }}<a class="text-link" href="{{ url_for('profile.view_profile') }}">Cancel</a></div>
+</form></section>
+{% endblock %}

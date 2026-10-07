@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Sign in — Foundry{% endblock %}
+{% block content %}
+<section class="form-page wrap">
+  <div class="form-intro"><p class="eyebrow">WELCOME BACK</p><h1>Let’s pick up<br><span>where you left off.</span></h1><p>Your community reports and updates are waiting for you.</p></div>
+  <form class="form-panel" method="post" novalidate>
+    {{ form.hidden_tag() }}<h2>Sign in</h2><p class="form-subtitle">Use your email or username.</p>
+    {% for field in [form.email, form.password] %}<div class="field"><label for="{{ field.id }}">{{ field.label.text }}</label>{{ field(class_='input', autocomplete='username' if field.name == 'email' else 'current-password') }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>{% endfor %}
+    {{ form.submit(class_='button form-submit') }}
+    <p class="form-foot">New here? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Create account — Foundry{% endblock %}
+{% block content %}
+<section class="form-page wrap">
+  <div class="form-intro"><p class="eyebrow">JOIN THE COMMUNITY</p><h1>Good things<br><span>start here.</span></h1><p>Make an account to report an item, follow up on a match, and help someone find their way back to what they lost.</p></div>
+  <form class="form-panel" method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <h2>Create your account</h2><p class="form-subtitle">It only takes a moment.</p>
+    {% for field in [form.full_name, form.username, form.email, form.password, form.confirm_password] %}
+      <div class="field"><label for="{{ field.id }}">{{ field.label.text }}</label>{{ field(class_='input', autocomplete='name' if field.name == 'full_name' else ('username' if field.name == 'username' else ('email' if field.name == 'email' else ('new-password' if field.name == 'password' else 'new-password')))) }}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}{% if field.name == 'password' %}<small>Use at least 10 characters.</small>{% endif %}</div>
+    {% endfor %}
+    {{ form.submit(class_='button form-submit') }}
+    <p class="form-foot">Already have an account? <a href="{{ url_for('auth.login') }}">Sign in</a></p>
+  </form>
+</section>
+{% endblock %}

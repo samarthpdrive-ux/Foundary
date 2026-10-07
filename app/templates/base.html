@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111210">
+  <title>{% block title %}Foundry — Lost & Found{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  {% block extra_head %}{% endblock %}
+  <script src="{{ url_for('static', filename='js/theme.js') }}" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('main.home') }}" aria-label="Foundry home"><span class="brand-mark">f</span> foundry</a>
+    <nav class="navigation" aria-label="Main navigation">
+      <details class="mobile-menu">
+        <summary aria-label="Open navigation menu">Menu</summary>
+        <div class="mobile-menu-panel">
+          <a href="{{ url_for('items.index') }}">Browse</a>
+          <a href="{{ url_for('maps.index') }}">Map</a>
+          <a href="{{ url_for('main.home') }}#how-it-works">How it works</a>
+          {% if current_user.is_authenticated %}
+          <a href="{{ url_for('items.create_report', item_type='lost') }}">Report an item</a>
+          <a href="{{ url_for('notifications.index') }}">Notifications{% if unread_notifications %} ({{ unread_notifications }}){% endif %}</a>
+          <a href="{{ url_for('messages.inbox') }}">Messages{% if unread_messages %} ({{ unread_messages }}){% endif %}</a>
+          {% if current_user.is_admin %}<a href="{{ url_for('admin.dashboard') }}">Admin</a>{% endif %}
+          {% endif %}
+        </div>
+      </details>
+      <a class="nav-link active" href="{{ url_for('items.index') }}">Browse</a>
+      <a class="nav-link" href="{{ url_for('maps.index') }}">Map</a>
+      <a class="nav-link" href="{{ url_for('main.home') }}#how-it-works">How it works</a>
+      <button class="theme-toggle" type="button" aria-label="Switch color theme" title="Switch color theme"><span aria-hidden="true">◐</span><span class="toggle-label">Light mode</span></button>
+      {% if current_user.is_authenticated %}
+      <a class="nav-link" href="{{ url_for('items.create_report', item_type='lost') }}">Report item</a>
+      <a class="nav-link notification-link" href="{{ url_for('notifications.index') }}" aria-label="Notifications{% if unread_notifications %}, {{ unread_notifications }} unread{% endif %}">♧{% if unread_notifications %}<span class="nav-badge">{{ unread_notifications }}</span>{% endif %}</a>
+      <a class="nav-link notification-link" href="{{ url_for('messages.inbox') }}" aria-label="Messages{% if unread_messages %}, {{ unread_messages }} unread{% endif %}">✉{% if unread_messages %}<span class="nav-badge">{{ unread_messages }}</span>{% endif %}</a>
+      {% if current_user.is_admin %}<a class="nav-link" href="{{ url_for('admin.dashboard') }}">Admin</a>{% endif %}
+      <a class="button button-small" href="{{ url_for('profile.view_profile') }}">My profile <span aria-hidden="true">↗</span></a>
+      {% else %}
+      <a class="button button-small" href="{{ url_for('auth.login') }}">Sign in <span aria-hidden="true">↗</span></a>
+      {% endif %}
+    </nav>
+  </header>
+  <main id="main-content" tabindex="-1">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<div class="flash-stack wrap" role="status">{% for category, message in messages %}<div class="flash flash-{{ category }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer"><a class="brand footer-brand" href="{{ url_for('main.home') }}"><span class="brand-mark">f</span> foundry</a><span>Good things find their way back.</span><span>© 2026 Foundry</span></footer>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,6 @@
+<article class="item-card">
+  <a href="{{ url_for('items.detail', item_id=item.id) }}" class="item-card-link">
+    {% if item.image_path %}<img class="item-card-image" src="{{ url_for('items.uploaded_image', filename=item.image_path) }}" alt="Photo of {{ item.title }}" loading="lazy">{% else %}<div class="item-card-image item-image-placeholder" aria-label="No photo provided"><span>✳</span></div>{% endif %}
+    <div class="item-card-body"><div class="item-card-meta"><span class="type-label type-{{ item.type|lower }}">{{ item.type|title }}</span><span class="status status-{{ item.status|lower }}">{{ item.status|title }}</span></div><h3>{{ item.title }}</h3><p>{{ item.category }}{% if item.color %} · {{ item.color }}{% endif %}</p><div class="item-card-foot"><span>⌖ {{ item.location_name }}</span><time datetime="{{ item.date.isoformat() }}">{{ item.date.strftime('%b %d, %Y') }}</time></div></div>
+  </a>
+</article>
