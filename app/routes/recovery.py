@@ -1,5 +1,6 @@
 from io import BytesIO
 from secrets import token_urlsafe
+from urllib.parse import urlsplit
 
 import qrcode
 from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, send_file, url_for
@@ -16,8 +17,18 @@ recovery_bp = Blueprint("recovery", __name__)
 
 def _safe_recovery_url(item):
     path = url_for("recovery.recover", token=item.recovery_token)
-    base = current_app.config.get("PUBLIC_BASE_URL")
-    return f"{base}{path}" if base else request.url_root.rstrip("/") + path
+    base = (current_app.config.get("PUBLIC_BASE_URL") or "").rstrip("/")
+    hostname = (urlsplit(base).hostname or "").lower() if base else ""
+    local_hosts = {"localhost", "127.0.0.1", "0.0.0.0", "::1"}
+
+    if current_app.debug and not base:
+        base = request.url_root.rstrip("/")
+    elif not base or hostname in local_hosts:
+        raise RuntimeError(
+            "Set PUBLIC_BASE_URL to the public HTTPS address before generating recovery QR codes."
+        )
+
+    return f"{base}{path}"
 
 
 @recovery_bp.post("/items/<int:item_id>/qr/enable")
