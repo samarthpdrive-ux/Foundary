@@ -65,7 +65,9 @@ class Config:
     # The matching registered account receives admin access on Render. The
     # account still authenticates with its own normal login password.
     ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "").strip().lower()
-    PUBLIC_BASE_URL = (os.environ.get("PUBLIC_BASE_URL") or os.environ.get("RENDER_EXTERNAL_URL", "")).rstrip("/")
+    # Render's assigned public URL must override a localhost URL copied from a
+    # local .env; local development still uses PUBLIC_BASE_URL when not on Render.
+    PUBLIC_BASE_URL = (os.environ.get("RENDER_EXTERNAL_URL") or os.environ.get("PUBLIC_BASE_URL", "")).rstrip("/")
     MAP_TILE_URL = os.environ.get("MAP_TILE_URL", "https://tile.openstreetmap.org/{z}/{x}/{y}.png")
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
